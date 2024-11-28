@@ -1,70 +1,72 @@
 package org.hello;
 
-import org.hello.nguoidung;
-import org.hello.dichvu;
+import org.hello.User;
+import org.hello.Service;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        dichvu dichvu = new dichvu();
+        Service service = new Service();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\nChọn một chức năng:");
-            System.out.println("1. Nhập danh sách người dùng.");
-            System.out.println("2. Nhập phiếu thu.");
-            System.out.println("3. Nhập phiếu chi.");
-            System.out.println("4. Tính lương người dùng ở thời điểm hiện tại.");
-            System.out.println("5. Tổng lợi nhận.");
-            System.out.println("6. Thoát.");
-            System.out.print("Lựa chọn của bạn: ");
-            int luaChon = scanner.nextInt();
+            System.out.println("\nSelect a function:");
+            System.out.println("1. Enter the user list.");
+            System.out.println("2. Enter receipt.");
+            System.out.println("3. Enter expense.");
+            System.out.println("4. Calculate current user salary.");
+            System.out.println("5. Total profit.");
+            System.out.println("6. Exit.");
+            System.out.print("Your choice: ");
+            int choice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (luaChon) {
+            switch (choice) {
                 case 1:
-                    System.out.print("Nhập tên người dùng: ");
-                    String ten = scanner.nextLine();
-                    System.out.print("Nhập lương tháng: ");
-                    double luongthang = scanner.nextDouble();
-                    System.out.println("Nhập số ngày đã làm trong tháng: ");
-                    int songaydalam = scanner.nextInt();
+                    System.out.print("Enter user name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter monthly salary: ");
+                    double monthlySalary = scanner.nextDouble();
+                    System.out.print("Enter number of days worked this month: ");
+                    int daysWorked = scanner.nextInt();
                     scanner.nextLine();
-                    dichvu.themnguoidung(new nguoidung(ten, luongthang, songaydalam));
+                    service.addUser(new User(name, monthlySalary, daysWorked));
                     break;
 
                 case 2:
-                    System.out.print("Nhập số tiền thu: ");
-                    double thu = scanner.nextDouble();
+                    System.out.print("Enter receipt amount: ");
+                    double receiptAmount = scanner.nextDouble();
                     scanner.nextLine();
-                    dichvu.themphieu(new giaodich("thu", thu));
+                    service.addTransaction(new Transaction("receipt", receiptAmount));
                     break;
 
                 case 3:
-                    System.out.print("Nhập số tiền chi: ");
-                    double chi = scanner.nextDouble();
+                    System.out.print("Enter expense amount: ");
+                    double expenseAmount = scanner.nextDouble();
                     scanner.nextLine();
-                    dichvu.themphieu(new giaodich("chi", chi));
+                    service.addTransaction(new Transaction("expense", expenseAmount));
                     break;
 
                 case 4:
-                    System.out.print("Lương hiện tại của người dùng: ");
-                    for (nguoidung nguoidung : dichvu.getdanhsachnguoidung()){
-                        System.out.println("Lương của " + nguoidung.getten() +" : "
-                                + String.format("%.0f", nguoidung.tinhluonghientai()));
+                    System.out.println("Current salary of users:");
+                    for (User user : service.getUserList()) {
+                        System.out.println("Salary of " + user.getName() + ": "
+                                + String.format("%.0f", user.calculateCurrentSalary()));
                     }
                     break;
+
                 case 5:
-                    double loinhuan = dichvu.tinhloinhuan();
-                    System.out.println("Lợi nhuận hiện tại: " + String.format("%.0f", loinhuan));
+                    double profit = service.calculateProfit();
+                    System.out.println("Current profit: " + String.format("%.0f", profit));
                     break;
+
                 case 6:
-                    System.out.println("Thoát.");
+                    System.out.println("Exit.");
                     return;
 
                 default:
-                    System.out.println("Lựa chọn không hợp lệ.");
+                    System.out.println("Invalid choice.");
             }
         }
     }
