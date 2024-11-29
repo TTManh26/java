@@ -1,72 +1,101 @@
 package org.hello;
 
-import org.hello.User;
-import org.hello.Service;
-
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Service service = new Service();
         Scanner scanner = new Scanner(System.in);
+        MyJDBC myJDBC = new MyJDBC();
+        int choice = 0;
 
         while (true) {
-            System.out.println("\nSelect a function:");
-            System.out.println("1. Enter the user list.");
-            System.out.println("2. Enter receipt.");
-            System.out.println("3. Enter expense.");
-            System.out.println("4. Calculate current user salary.");
-            System.out.println("5. Total profit.");
-            System.out.println("6. Exit.");
-            System.out.print("Your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println("1. List Employees");
+            System.out.println("2. Add Employees");
+            System.out.println("3. Update Employees");
+            System.out.println("4. Delete Employees By Id");
+            System.out.println("5. Exit");
+            System.out.print("Choose: ");
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid choice. Please enter a valid option.");
+                continue;
+            }
+
+            if (choice == 5) {
+                break;
+            }
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter user name: ");
-                    String name = scanner.nextLine();
-                    System.out.print("Enter monthly salary: ");
-                    double monthlySalary = scanner.nextDouble();
-                    System.out.print("Enter number of days worked this month: ");
-                    int daysWorked = scanner.nextInt();
-                    scanner.nextLine();
-                    service.addUser(new User(name, monthlySalary, daysWorked));
+                    myJDBC.findAll().forEach(employees -> System.out.println(employees));
                     break;
-
                 case 2:
-                    System.out.print("Enter receipt amount: ");
-                    double receiptAmount = scanner.nextDouble();
-                    scanner.nextLine();
-                    service.addTransaction(new Transaction("receipt", receiptAmount));
-                    break;
+                    Employees employees = new Employees();
+                    System.out.print("Name: ");
+                    employees.setName(scanner.nextLine());
+                    System.out.print("Salary: ");
+                    try {
+                        employees.setSalary(Integer.parseInt(scanner.nextLine()));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid salary input. Please enter a valid number.");
+                        continue;
+                    }
+                    System.out.print("Working days: ");
+                    try {
+                        employees.setWorking_days(Integer.parseInt(scanner.nextLine()));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid working days input. Please enter a valid number.");
+                        continue;
+                    }
 
-                case 3:
-                    System.out.print("Enter expense amount: ");
-                    double expenseAmount = scanner.nextDouble();
-                    scanner.nextLine();
-                    service.addTransaction(new Transaction("expense", expenseAmount));
-                    break;
-
-                case 4:
-                    System.out.println("Current salary of users:");
-                    for (User user : service.getUserList()) {
-                        System.out.println("Salary of " + user.getName() + ": "
-                                + String.format("%.0f", user.calculateCurrentSalary()));
+                    if (myJDBC.add(employees)) {
+                        System.out.println("Employee added successfully!");
+                    } else {
+                        System.out.println("Failed to create employee.");
                     }
                     break;
-
-                case 5:
-                    double profit = service.calculateProfit();
-                    System.out.println("Current profit: " + String.format("%.0f", profit));
+                case 3:
+                    System.out.print("Enter Id To Update: ");
+                    Employees employees1 = myJDBC.findById(Integer.parseInt(scanner.nextLine()));
+                    if (employees1 == null) {
+                        System.out.println("Employee not found.");
+                        break;
+                    }
+                    while (true) {
+                        System.out.println(employees1);
+                        System.out.println("1. Update Name");
+                        System.out.println("2. Update Salary");
+                        System.out.println("3. Update Working Days");
+                        System.out.println("4. Save");
+                        int choice1 = Integer.parseInt(scanner.nextLine());
+                        if (choice1 == 1) {
+                            System.out.print("Name: ");
+                            employees1.setName(scanner.nextLine());
+                        }
+                        if (choice1 == 2) {
+                            System.out.print("Salary: ");
+                            employees1.setSalary(Integer.parseInt(scanner.nextLine()));
+                        }
+                        if (choice1 == 3) {
+                            System.out.print("Working Days: ");
+                            employees1.setWorking_days(Integer.parseInt(scanner.nextLine()));
+                        }
+                        if (choice1 == 4) {
+                            myJDBC.update(employees1);
+                            System.out.println("Update successful.");
+                            break;
+                        }
+                    }
                     break;
-
-                case 6:
-                    System.out.println("Exit.");
-                    return;
-
-                default:
-                    System.out.println("Invalid choice.");
+                case 4:
+                    System.out.print("Enter Id To Delete: ");
+                    if (myJDBC.delete(Integer.parseInt(scanner.nextLine()))) {
+                        System.out.println("Employee deleted successfully.");
+                    } else {
+                        System.out.println("Failed to delete employee.");
+                    }
+                    break;
             }
         }
     }
