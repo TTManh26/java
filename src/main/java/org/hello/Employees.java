@@ -4,15 +4,11 @@ public class Employees {
     private int id;
     private String name;
     private int salary;
-    private int working_days;
+    private int workingdays;
+    private int receipt;
+    private int payment;
 
     public Employees() {
-    }
-
-    public Employees(String name, int salary, int working_days) {
-        this.setName(name);
-        this.setSalary(salary);
-        this.setWorking_days(working_days);
     }
 
     public int getId() {
@@ -39,12 +35,28 @@ public class Employees {
         this.salary = salary;
     }
 
-    public int getWorking_days() {
-        return working_days;
+    public int getWorkingdays() {
+        return workingdays;
     }
 
-    public void setWorking_days(int working_days) {
-        this.working_days = working_days;
+    public void setWorkingdays(int workingdays) {
+        this.workingdays = workingdays;
+    }
+
+    public int getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(int receipt) {
+        this.receipt = receipt;
+    }
+
+    public int getPayment() {
+        return payment;
+    }
+
+    public void setPayment(int payment) {
+        this.payment = payment;
     }
 
     @Override
@@ -53,8 +65,9 @@ public class Employees {
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
                 ", salary=" + getSalary() +
-                ", working_days=" + getWorking_days() +
+                ", workingdays=" + getWorkingdays() +
+                ", receipt=" + getReceipt() +
+                ", payment=" + getPayment() +
                 '}';
     }
-
 }

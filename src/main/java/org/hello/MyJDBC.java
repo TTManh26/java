@@ -29,7 +29,9 @@ public class MyJDBC {
                 employees.setId(resultSet.getInt("id"));
                 employees.setName(resultSet.getString("name"));
                 employees.setSalary(resultSet.getInt("salary"));
-                employees.setWorking_days(resultSet.getInt("working_days"));
+                employees.setWorkingdays(resultSet.getInt("workingdays"));
+                employees.setReceipt(resultSet.getInt("receipt"));
+                employees.setPayment((resultSet.getInt("payment")));
                 list.add(employees);
             }
             resultSet.close();
@@ -42,10 +44,12 @@ public class MyJDBC {
     // Add employees
     public boolean add(Employees employees) {
         try {
-            PreparedStatement preparedStatement = CONNECTION.prepareStatement("INSERT INTO employees (name, salary, working_days) VALUES (?, ?, ?);");
+            PreparedStatement preparedStatement = CONNECTION.prepareStatement("INSERT INTO employees (name, salary, workingdays, receipt, payment) VALUES (?, ?, ?, ?, ?);");
             preparedStatement.setString(1, employees.getName());
             preparedStatement.setInt(2, employees.getSalary());
-            preparedStatement.setInt(3, employees.getWorking_days());
+            preparedStatement.setInt(3, employees.getWorkingdays());
+            preparedStatement.setInt(4, employees.getReceipt());
+            preparedStatement.setInt(5, employees.getPayment());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return true;
@@ -67,7 +71,9 @@ public class MyJDBC {
                 employee.setId(resultSet.getInt("id"));
                 employee.setName(resultSet.getString("name"));
                 employee.setSalary(resultSet.getInt("salary"));
-                employee.setWorking_days(resultSet.getInt("working_days"));
+                employee.setWorkingdays(resultSet.getInt("workingdays"));
+                employee.setReceipt(resultSet.getInt("receipt"));
+                employee.setPayment(resultSet.getInt("payment"));
             }
             resultSet.close();
         } catch (SQLException e) {
@@ -79,11 +85,13 @@ public class MyJDBC {
     // Update employees
     public boolean update(Employees employees) {
         try {
-            PreparedStatement preparedStatement = CONNECTION.prepareStatement("UPDATE employees SET name = ?, salary = ?, working_days = ? WHERE id = ?");
+            PreparedStatement preparedStatement = CONNECTION.prepareStatement("UPDATE employees SET name = ?, salary = ?, workingdays = ?, receipt = ?, payment = ? WHERE id = ?");
             preparedStatement.setString(1, employees.getName());
             preparedStatement.setInt(2, employees.getSalary());
-            preparedStatement.setInt(3, employees.getWorking_days());
-            preparedStatement.setInt(4, employees.getId());
+            preparedStatement.setInt(3, employees.getWorkingdays());
+            preparedStatement.setInt(4, employees.getReceipt());
+            preparedStatement.setInt(5, employees.getPayment());
+            preparedStatement.setInt(6, employees.getId());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return true;
