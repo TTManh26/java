@@ -1,15 +1,28 @@
 package org.hello;
 
-public class Employees {
-    private int id;
-    private String name;
-    private int salary;
-    private int workingdays;
-    private int receipt;
-    private int payment;
+import javax.persistence.*;
 
-    public Employees() {
-    }
+@Entity
+@Table(name = "employees")
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "salary", nullable = false)
+    private double salary;
+
+    @Column(name = "workingdays", nullable = false)
+    private double workingdays;
+
+    @Column(name = "receipt", nullable = false)
+    private double receipt;
+
+    @Column(name = "payment", nullable = false)
+    private double payment;
 
     public int getId() {
         return id;
@@ -27,41 +40,41 @@ public class Employees {
         this.name = name;
     }
 
-    public int getSalary() {
+    public double getSalary() {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(double salary) {
         this.salary = salary;
     }
 
-    public int getWorkingdays() {
+    public double getWorkingdays() {
         return workingdays;
     }
 
-    public void setWorkingdays(int workingdays) {
+    public void setWorkingdays(double workingdays) {
         this.workingdays = workingdays;
     }
 
-    public int getReceipt() {
+    public double getReceipt() {
         return receipt;
     }
 
-    public void setReceipt(int receipt) {
+    public void setReceipt(double receipt) {
         this.receipt = receipt;
     }
 
-    public int getPayment() {
+    public double getPayment() {
         return payment;
     }
 
-    public void setPayment(int payment) {
+    public void setPayment(double payment) {
         this.payment = payment;
     }
 
     @Override
     public String toString() {
-        return "Employees{" +
+        return "Employee{" +
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
                 ", salary=" + getSalary() +

@@ -1,147 +1,79 @@
 package org.hello;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        EmployeeDAO employeeDAO = new EmployeeDAO();
         Scanner scanner = new Scanner(System.in);
-        MyJDBC myJDBC = new MyJDBC();
-        int choice = 0;
 
         while (true) {
-            System.out.println("1. List Employees");
-            System.out.println("2. Add Employees");
-            System.out.println("3. Update Employees");
-            System.out.println("4. Delete Employees By Id");
-            System.out.println("5. Calculate Current Employees Salary");
+            System.out.println("\n1. List Employees");
+            System.out.println("2. Add Employee");
+            System.out.println("3. Update Employee");
+            System.out.println("4. Delete Employee");
+            System.out.println("5. Calculate Total Salary");
             System.out.println("6. Exit");
-            System.out.print("Choose: ");
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid choice. Please enter a valid option.");
-                continue;
-            }
+            System.out.print("Choose an option: ");
+            int option = scanner.nextInt();
 
-            if (choice == 6) {
-                break;
-            }
-
-            switch (choice) {
+            switch (option) {
                 case 1:
-                    myJDBC.findAll().forEach(employees -> System.out.println(employees));
+                    List<Employee> employees = employeeDAO.listEmployees();
+                    for (Employee employee : employees) {
+                        System.out.printf("Employee ID: %d, Name: %s, Salary: %.0f, Working Days: %.0f, Receipt: %.0f, Payment: %.0f%n",
+                                employee.getId(), employee.getName(), employee.getSalary(), employee.getWorkingdays(), employee.getReceipt(), employee.getPayment());
+                    }
                     break;
                 case 2:
-                    Employees employees = new Employees();
-                    System.out.print("Name: ");
-                    employees.setName(scanner.nextLine());
-                    System.out.print("Salary: ");
-                    try {
-                        employees.setSalary(Integer.parseInt(scanner.nextLine()));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid salary input. Please enter a valid number.");
-                        continue;
-                    }
-                    System.out.print("Working days: ");
-                    try {
-                        employees.setWorkingdays(Integer.parseInt(scanner.nextLine()));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid working days input. Please enter a valid number.");
-                        continue;
-                    }
-                    System.out.print("Receipt: ");
-                    try {
-                        employees.setReceipt(Integer.parseInt(scanner.nextLine()));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid receipt input. Please enter a valid number.");
-                        continue;
-                    }
-                    System.out.print("Payment: ");
-                    try {
-                        employees.setPayment(Integer.parseInt(scanner.nextLine()));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid payment input. Please enter a valid number.");
-                        continue;
-                    }
-
-                    if (myJDBC.add(employees)) {
-                        System.out.println("Employee added successfully!");
-                    } else {
-                        System.out.println("Failed to create employee.");
-                    }
+                    System.out.print("Enter name: ");
+                    String name = scanner.next();
+                    System.out.print("Enter salary: ");
+                    double salary = scanner.nextDouble();
+                    System.out.print("Enter working days: ");
+                    double workingdays = scanner.nextDouble();
+                    System.out.print("Enter receipt: ");
+                    double receipt = scanner.nextDouble();
+                    System.out.print("Enter payment: ");
+                    double payment = scanner.nextDouble();
+                    Employee employee = new Employee();
+                    employee.setName(name);
+                    employee.setSalary(salary);
+                    employee.setWorkingdays(workingdays);
+                    employee.setReceipt(receipt);
+                    employee.setPayment(payment);
+                    employeeDAO.addEmployee(employee);
                     break;
                 case 3:
-                    System.out.print("Enter Id To Update: ");
-                    Employees employees1 = myJDBC.findById(Integer.parseInt(scanner.nextLine()));
-                    if (employees1 == null) {
-                        System.out.println("Employee not found.");
-                        break;
-                    }
-                    while (true) {
-                        System.out.println(employees1);
-                        System.out.println("1. Update Name");
-                        System.out.println("2. Update Salary");
-                        System.out.println("3. Update Working Days");
-                        System.out.println("4. Update Receipt");
-                        System.out.println("5. Update Payment");
-                        System.out.println("6. Save");
-                        int choice1 = Integer.parseInt(scanner.nextLine());
-                        if (choice1 == 1) {
-                            System.out.print("Name: ");
-                            employees1.setName(scanner.nextLine());
-                        }
-                        if (choice1 == 2) {
-                            System.out.print("Salary: ");
-                            employees1.setSalary(Integer.parseInt(scanner.nextLine()));
-                        }
-                        if (choice1 == 3) {
-                            System.out.print("Working Days: ");
-                            employees1.setWorkingdays(Integer.parseInt(scanner.nextLine()));
-                        }
-                        if (choice1 == 4) {
-                            System.out.print("Receipt: ");
-                            employees1.setReceipt(Integer.parseInt(scanner.nextLine()));
-                        }
-                        if (choice1 == 5) {
-                            System.out.print("Payment: ");
-                            employees1.setPayment(Integer.parseInt(scanner.nextLine()));
-                        }
-                        if (choice1 == 6) {
-                            myJDBC.update(employees1);
-                            System.out.println("Update successful.");
-                            break;
-                        }
-                    }
+                    System.out.print("Enter ID: ");
+                    int id = scanner.nextInt();
+                    System.out.print("Enter new name: ");
+                    name = scanner.next();
+                    System.out.print("Enter new salary: ");
+                    salary = scanner.nextDouble();
+                    System.out.print("Enter new working days: ");
+                    workingdays = scanner.nextDouble();
+                    System.out.print("Enter new receipt: ");
+                    receipt = scanner.nextDouble();
+                    System.out.print("Enter new payment: ");
+                    payment = scanner.nextDouble();
+                    employeeDAO.updateEmployee(id, name, salary, workingdays, receipt, payment);
                     break;
                 case 4:
-                    System.out.print("Enter Id To Delete: ");
-                    if (myJDBC.delete(Integer.parseInt(scanner.nextLine()))) {
-                        System.out.println("Employee deleted successfully.");
-                    } else {
-                        System.out.println("Failed to delete employee.");
-                    }
+                    System.out.print("Enter ID: ");
+                    id = scanner.nextInt();
+                    employeeDAO.deleteEmployee(id);
                     break;
                 case 5:
-                    myJDBC.findAll().forEach(employees2 -> {
-                        int salary = employees2.getSalary();
-                        int workingDays = employees2.getWorkingdays();
-                        int receipt = employees2.getReceipt();
-                        int payment = employees2.getPayment();
-
-                        if (workingDays == 0) {
-                            System.out.println("Employee" + employees2.getName() + "has no salary.");
-                            return;
-                        }
-
-                        double calculatedSalary = (salary / (double) workingDays) + payment + (receipt * 0.1);
-
-                        System.out.printf("Employee: %s\n", employees2.getName());
-                        System.out.printf("Salary per day: %.0f\n", salary / (double) workingDays);
-                        System.out.printf("Receipt: %d, Payment: %d\n", receipt, payment);
-                        System.out.printf("Calculated Salary: %.0f\n", calculatedSalary);
-                        System.out.println("-------------------------------------------");
-                    });
+                    System.out.println(employeeDAO.calculateTotalSalary());
                     break;
+                case 6:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
             }
         }
     }
